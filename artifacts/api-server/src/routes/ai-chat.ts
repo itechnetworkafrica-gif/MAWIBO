@@ -7,7 +7,9 @@ import OpenAI from "openai";
 const router = Router();
 const DEFAULT_USER_ID = 1;
 
-const openai = new OpenAI({ apiKey: process.env["OPENAI_API_KEY"] });
+function getOpenAI() {
+  return new OpenAI({ apiKey: process.env["OPENAI_API_KEY"] });
+}
 
 const SYSTEM_PROMPT = `You are MAWIBO Health Mate, an expert AI health assistant for Liberia and West Africa. You are knowledgeable about:
 - Tropical diseases common in West Africa: malaria, typhoid, cholera, tuberculosis, HIV, hepatitis
@@ -91,7 +93,7 @@ router.post("/sessions/:id/messages", async (req, res) => {
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
 
-    const stream = await openai.chat.completions.create({
+    const stream = await getOpenAI().chat.completions.create({
       model: "gpt-4o-mini",
       messages,
       stream: true,

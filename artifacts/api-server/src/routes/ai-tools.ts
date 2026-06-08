@@ -2,10 +2,13 @@ import { Router } from "express";
 import OpenAI from "openai";
 
 const router = Router();
-const openai = new OpenAI({ apiKey: process.env["OPENAI_API_KEY"] });
+
+function getOpenAI() {
+  return new OpenAI({ apiKey: process.env["OPENAI_API_KEY"] });
+}
 
 async function callAI(systemPrompt: string, userMessage: string, maxTokens = 600): Promise<string> {
-  const res = await openai.chat.completions.create({
+  const res = await getOpenAI().chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
       { role: "system", content: systemPrompt },
