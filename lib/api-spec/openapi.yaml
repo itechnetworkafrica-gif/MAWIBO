@@ -1,22 +1,46 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: MAWIBO Super Health Ecosystem API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+    description: Health check
+  - name: users
+    description: User management
+  - name: doctors
+    description: Doctor marketplace
+  - name: appointments
+    description: Appointment management
+  - name: health-records
+    description: Digital health records
+  - name: medications
+    description: Medication & reminders
+  - name: ai-chat
+    description: AI Health Mate
+  - name: hospitals
+    description: Hospital directory
+  - name: pharmacies
+    description: Pharmacy ecosystem
+  - name: labs
+    description: Laboratory network
+  - name: mental-health
+    description: Mental health & wellness
+  - name: emergency
+    description: Emergency contacts
+  - name: blood-bank
+    description: Blood bank platform
+  - name: dashboard
+    description: Dashboard & analytics
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +48,884 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ─── USERS ────────────────────────────────────────────────────────────────
+  /users/profile:
+    get:
+      operationId: getProfile
+      tags: [users]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+    put:
+      operationId: updateProfile
+      tags: [users]
+      summary: Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileInput"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /users/health-profile:
+    get:
+      operationId: getHealthProfile
+      tags: [users]
+      summary: Get user health profile
+      responses:
+        "200":
+          description: Health profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthProfile"
+    put:
+      operationId: updateHealthProfile
+      tags: [users]
+      summary: Update health profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HealthProfileInput"
+      responses:
+        "200":
+          description: Updated health profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthProfile"
+
+  # ─── DOCTORS ──────────────────────────────────────────────────────────────
+  /doctors:
+    get:
+      operationId: listDoctors
+      tags: [doctors]
+      summary: List doctors with filters
+      parameters:
+        - name: specialty
+          in: query
+          schema:
+            type: string
+        - name: county
+          in: query
+          schema:
+            type: string
+        - name: available
+          in: query
+          schema:
+            type: boolean
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Doctor"
+
+  /doctors/{id}:
+    get:
+      operationId: getDoctor
+      tags: [doctors]
+      summary: Get doctor details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Doctor details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doctor"
+
+  /doctors/featured:
+    get:
+      operationId: getFeaturedDoctors
+      tags: [doctors]
+      summary: Get featured/top-rated doctors
+      responses:
+        "200":
+          description: Featured doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Doctor"
+
+  /doctors/specialties:
+    get:
+      operationId: getDoctorSpecialties
+      tags: [doctors]
+      summary: Get list of available specialties
+      responses:
+        "200":
+          description: Specialties list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Specialty"
+
+  # ─── APPOINTMENTS ─────────────────────────────────────────────────────────
+  /appointments:
+    get:
+      operationId: listAppointments
+      tags: [appointments]
+      summary: List user appointments
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Appointment"
+    post:
+      operationId: createAppointment
+      tags: [appointments]
+      summary: Book a new appointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentInput"
+      responses:
+        "201":
+          description: Appointment booked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+
+  /appointments/{id}:
+    get:
+      operationId: getAppointment
+      tags: [appointments]
+      summary: Get appointment details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Appointment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+    patch:
+      operationId: updateAppointment
+      tags: [appointments]
+      summary: Update or cancel appointment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentUpdate"
+      responses:
+        "200":
+          description: Updated appointment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+
+  /appointments/upcoming:
+    get:
+      operationId: getUpcomingAppointments
+      tags: [appointments]
+      summary: Get next upcoming appointments
+      responses:
+        "200":
+          description: Upcoming appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Appointment"
+
+  # ─── HEALTH RECORDS ───────────────────────────────────────────────────────
+  /health-records:
+    get:
+      operationId: listHealthRecords
+      tags: [health-records]
+      summary: List health records
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Health records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HealthRecord"
+    post:
+      operationId: createHealthRecord
+      tags: [health-records]
+      summary: Add health record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HealthRecordInput"
+      responses:
+        "201":
+          description: Created health record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthRecord"
+
+  /health-records/{id}:
+    get:
+      operationId: getHealthRecord
+      tags: [health-records]
+      summary: Get health record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Health record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthRecord"
+    delete:
+      operationId: deleteHealthRecord
+      tags: [health-records]
+      summary: Delete health record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── MEDICATIONS ──────────────────────────────────────────────────────────
+  /medications:
+    get:
+      operationId: listMedications
+      tags: [medications]
+      summary: List current medications
+      responses:
+        "200":
+          description: Medications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Medication"
+    post:
+      operationId: createMedication
+      tags: [medications]
+      summary: Add medication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MedicationInput"
+      responses:
+        "201":
+          description: Medication added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Medication"
+
+  /medications/{id}:
+    patch:
+      operationId: updateMedication
+      tags: [medications]
+      summary: Update medication
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MedicationUpdate"
+      responses:
+        "200":
+          description: Updated medication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Medication"
+    delete:
+      operationId: deleteMedication
+      tags: [medications]
+      summary: Remove medication
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── AI CHAT ──────────────────────────────────────────────────────────────
+  /ai-chat/sessions:
+    get:
+      operationId: listChatSessions
+      tags: [ai-chat]
+      summary: List AI chat sessions
+      responses:
+        "200":
+          description: Chat sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatSession"
+    post:
+      operationId: createChatSession
+      tags: [ai-chat]
+      summary: Start new AI chat session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatSessionInput"
+      responses:
+        "201":
+          description: Chat session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatSession"
+
+  /ai-chat/sessions/{id}/messages:
+    get:
+      operationId: getChatMessages
+      tags: [ai-chat]
+      summary: Get messages in a chat session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatMessage"
+    post:
+      operationId: sendChatMessage
+      tags: [ai-chat]
+      summary: Send a message to the AI
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatMessageInput"
+      responses:
+        "200":
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatMessage"
+
+  # ─── HOSPITALS ────────────────────────────────────────────────────────────
+  /hospitals:
+    get:
+      operationId: listHospitals
+      tags: [hospitals]
+      summary: List hospitals and clinics
+      parameters:
+        - name: county
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Hospitals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Hospital"
+
+  /hospitals/{id}:
+    get:
+      operationId: getHospital
+      tags: [hospitals]
+      summary: Get hospital details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Hospital details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hospital"
+
+  # ─── PHARMACIES ───────────────────────────────────────────────────────────
+  /pharmacies:
+    get:
+      operationId: listPharmacies
+      tags: [pharmacies]
+      summary: List pharmacies
+      responses:
+        "200":
+          description: Pharmacies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pharmacy"
+
+  /pharmacies/medicines:
+    get:
+      operationId: searchMedicines
+      tags: [pharmacies]
+      summary: Search medicines
+      parameters:
+        - name: query
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Medicines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Medicine"
+
+  # ─── LABS ─────────────────────────────────────────────────────────────────
+  /labs:
+    get:
+      operationId: listLabs
+      tags: [labs]
+      summary: List laboratories
+      responses:
+        "200":
+          description: Labs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lab"
+
+  /labs/bookings:
+    get:
+      operationId: listLabBookings
+      tags: [labs]
+      summary: List lab test bookings
+      responses:
+        "200":
+          description: Lab bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LabBooking"
+    post:
+      operationId: createLabBooking
+      tags: [labs]
+      summary: Book a lab test
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LabBookingInput"
+      responses:
+        "201":
+          description: Lab booking created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LabBooking"
+
+  # ─── MENTAL HEALTH ────────────────────────────────────────────────────────
+  /mental-health/mood-logs:
+    get:
+      operationId: listMoodLogs
+      tags: [mental-health]
+      summary: List mood check-ins
+      responses:
+        "200":
+          description: Mood logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MoodLog"
+    post:
+      operationId: createMoodLog
+      tags: [mental-health]
+      summary: Log a mood check-in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MoodLogInput"
+      responses:
+        "201":
+          description: Mood logged
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MoodLog"
+
+  /mental-health/journal:
+    get:
+      operationId: listJournalEntries
+      tags: [mental-health]
+      summary: List journal entries
+      responses:
+        "200":
+          description: Journal entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JournalEntry"
+    post:
+      operationId: createJournalEntry
+      tags: [mental-health]
+      summary: Create journal entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JournalEntryInput"
+      responses:
+        "201":
+          description: Journal entry created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntry"
+
+  # ─── EMERGENCY ────────────────────────────────────────────────────────────
+  /emergency/contacts:
+    get:
+      operationId: listEmergencyContacts
+      tags: [emergency]
+      summary: List emergency contacts
+      responses:
+        "200":
+          description: Emergency contacts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmergencyContact"
+    post:
+      operationId: createEmergencyContact
+      tags: [emergency]
+      summary: Add emergency contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmergencyContactInput"
+      responses:
+        "201":
+          description: Emergency contact added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmergencyContact"
+
+  /emergency/contacts/{id}:
+    delete:
+      operationId: deleteEmergencyContact
+      tags: [emergency]
+      summary: Remove emergency contact
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── BLOOD BANK ───────────────────────────────────────────────────────────
+  /blood-bank/donors:
+    get:
+      operationId: listBloodDonors
+      tags: [blood-bank]
+      summary: List blood donors
+      parameters:
+        - name: bloodGroup
+          in: query
+          schema:
+            type: string
+        - name: county
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Blood donors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BloodDonor"
+    post:
+      operationId: registerBloodDonor
+      tags: [blood-bank]
+      summary: Register as blood donor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BloodDonorInput"
+      responses:
+        "201":
+          description: Donor registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BloodDonor"
+
+  /blood-bank/requests:
+    get:
+      operationId: listBloodRequests
+      tags: [blood-bank]
+      summary: List blood requests
+      responses:
+        "200":
+          description: Blood requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BloodRequest"
+    post:
+      operationId: createBloodRequest
+      tags: [blood-bank]
+      summary: Create blood request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BloodRequestInput"
+      responses:
+        "201":
+          description: Blood request created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BloodRequest"
+
+  # ─── DASHBOARD (WOW ENDPOINTS) ────────────────────────────────────────────
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary stats
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/health-score:
+    get:
+      operationId: getHealthScore
+      tags: [dashboard]
+      summary: Get user's personal health score
+      responses:
+        "200":
+          description: Health score
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthScore"
+
+  /dashboard/activity-feed:
+    get:
+      operationId: getActivityFeed
+      tags: [dashboard]
+      summary: Get recent health activity feed
+      responses:
+        "200":
+          description: Activity feed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /dashboard/vitals:
+    get:
+      operationId: getVitalsTrend
+      tags: [dashboard]
+      summary: Get vitals trend data
+      responses:
+        "200":
+          description: Vitals data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VitalsTrend"
+    post:
+      operationId: logVitals
+      tags: [dashboard]
+      summary: Log today's vitals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VitalsInput"
+      responses:
+        "201":
+          description: Vitals logged
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VitalsEntry"
+
+  /dashboard/water-tracker:
+    get:
+      operationId: getWaterTracker
+      tags: [dashboard]
+      summary: Get today's water intake
+      responses:
+        "200":
+          description: Water intake
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WaterTracker"
+    post:
+      operationId: logWaterIntake
+      tags: [dashboard]
+      summary: Log water intake
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WaterLogInput"
+      responses:
+        "200":
+          description: Updated water tracker
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WaterTracker"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +936,499 @@ components:
       required:
         - status
 
+    UserProfile:
+      type: object
+      required: [id, name, email, phone, county, avatarUrl]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        county: { type: string }
+        city: { type: string }
+        dateOfBirth: { type: ["string", "null"] }
+        gender: { type: ["string", "null"] }
+        avatarUrl: { type: ["string", "null"] }
+        createdAt: { type: string }
+
+    UserProfileInput:
+      type: object
+      properties:
+        name: { type: string }
+        phone: { type: string }
+        county: { type: string }
+        city: { type: string }
+        dateOfBirth: { type: string }
+        gender: { type: string }
+        avatarUrl: { type: string }
+
+    HealthProfile:
+      type: object
+      required: [id, userId, bloodGroup, healthScore]
+      properties:
+        id: { type: integer }
+        userId: { type: integer }
+        bloodGroup: { type: ["string", "null"] }
+        height: { type: ["number", "null"] }
+        weight: { type: ["number", "null"] }
+        bmi: { type: ["number", "null"] }
+        allergies: { type: array, items: { type: string } }
+        chronicConditions: { type: array, items: { type: string } }
+        healthScore: { type: integer }
+        updatedAt: { type: string }
+
+    HealthProfileInput:
+      type: object
+      properties:
+        bloodGroup: { type: string }
+        height: { type: number }
+        weight: { type: number }
+        allergies: { type: array, items: { type: string } }
+        chronicConditions: { type: array, items: { type: string } }
+
+    Doctor:
+      type: object
+      required: [id, name, specialty, hospital, county, rating, consultationFee, available, imageUrl]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        specialty: { type: string }
+        hospital: { type: string }
+        county: { type: string }
+        city: { type: string }
+        rating: { type: number }
+        reviewCount: { type: integer }
+        consultationFee: { type: number }
+        available: { type: boolean }
+        imageUrl: { type: ["string", "null"] }
+        bio: { type: ["string", "null"] }
+        yearsExperience: { type: integer }
+        languages: { type: array, items: { type: string } }
+
+    Specialty:
+      type: object
+      required: [id, name, icon, doctorCount]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        icon: { type: string }
+        doctorCount: { type: integer }
+
+    Appointment:
+      type: object
+      required: [id, doctorId, doctorName, specialty, date, time, type, status]
+      properties:
+        id: { type: integer }
+        doctorId: { type: integer }
+        doctorName: { type: string }
+        doctorImageUrl: { type: ["string", "null"] }
+        specialty: { type: string }
+        hospital: { type: string }
+        date: { type: string }
+        time: { type: string }
+        type: { type: string }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        fee: { type: number }
+
+    AppointmentInput:
+      type: object
+      required: [doctorId, date, time, type]
+      properties:
+        doctorId: { type: integer }
+        date: { type: string }
+        time: { type: string }
+        type: { type: string }
+        notes: { type: string }
+
+    AppointmentUpdate:
+      type: object
+      properties:
+        status: { type: string }
+        date: { type: string }
+        time: { type: string }
+        notes: { type: string }
+
+    HealthRecord:
+      type: object
+      required: [id, type, title, date, provider]
+      properties:
+        id: { type: integer }
+        type: { type: string }
+        title: { type: string }
+        date: { type: string }
+        provider: { type: string }
+        description: { type: ["string", "null"] }
+        fileUrl: { type: ["string", "null"] }
+        tags: { type: array, items: { type: string } }
+
+    HealthRecordInput:
+      type: object
+      required: [type, title, date, provider]
+      properties:
+        type: { type: string }
+        title: { type: string }
+        date: { type: string }
+        provider: { type: string }
+        description: { type: string }
+        tags: { type: array, items: { type: string } }
+
+    Medication:
+      type: object
+      required: [id, name, dosage, frequency, startDate, active]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        dosage: { type: string }
+        frequency: { type: string }
+        startDate: { type: string }
+        endDate: { type: ["string", "null"] }
+        prescribedBy: { type: ["string", "null"] }
+        notes: { type: ["string", "null"] }
+        active: { type: boolean }
+        reminderTimes: { type: array, items: { type: string } }
+
+    MedicationInput:
+      type: object
+      required: [name, dosage, frequency, startDate]
+      properties:
+        name: { type: string }
+        dosage: { type: string }
+        frequency: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        prescribedBy: { type: string }
+        notes: { type: string }
+        reminderTimes: { type: array, items: { type: string } }
+
+    MedicationUpdate:
+      type: object
+      properties:
+        dosage: { type: string }
+        frequency: { type: string }
+        active: { type: boolean }
+        endDate: { type: string }
+        notes: { type: string }
+
+    ChatSession:
+      type: object
+      required: [id, topic, createdAt, messageCount]
+      properties:
+        id: { type: integer }
+        topic: { type: string }
+        createdAt: { type: string }
+        messageCount: { type: integer }
+        lastMessage: { type: ["string", "null"] }
+
+    ChatSessionInput:
+      type: object
+      required: [topic]
+      properties:
+        topic: { type: string }
+
+    ChatMessage:
+      type: object
+      required: [id, sessionId, role, content, createdAt]
+      properties:
+        id: { type: integer }
+        sessionId: { type: integer }
+        role: { type: string }
+        content: { type: string }
+        createdAt: { type: string }
+
+    ChatMessageInput:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string }
+
+    Hospital:
+      type: object
+      required: [id, name, type, county, city, phone, rating]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        type: { type: string }
+        county: { type: string }
+        city: { type: string }
+        phone: { type: string }
+        email: { type: ["string", "null"] }
+        address: { type: string }
+        rating: { type: number }
+        reviewCount: { type: integer }
+        services: { type: array, items: { type: string } }
+        departments: { type: array, items: { type: string } }
+        imageUrl: { type: ["string", "null"] }
+        latitude: { type: ["number", "null"] }
+        longitude: { type: ["number", "null"] }
+        emergencyAvailable: { type: boolean }
+        openNow: { type: boolean }
+
+    Pharmacy:
+      type: object
+      required: [id, name, county, city, phone, openNow]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        county: { type: string }
+        city: { type: string }
+        phone: { type: string }
+        address: { type: string }
+        openNow: { type: boolean }
+        deliveryAvailable: { type: boolean }
+        rating: { type: number }
+
+    Medicine:
+      type: object
+      required: [id, name, category, price, inStock]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        genericName: { type: ["string", "null"] }
+        category: { type: string }
+        price: { type: number }
+        inStock: { type: boolean }
+        requiresPrescription: { type: boolean }
+        description: { type: ["string", "null"] }
+
+    Lab:
+      type: object
+      required: [id, name, county, city, phone]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        county: { type: string }
+        city: { type: string }
+        phone: { type: string }
+        address: { type: string }
+        rating: { type: number }
+        homeCollectionAvailable: { type: boolean }
+        tests: { type: array, items: { type: string } }
+
+    LabBooking:
+      type: object
+      required: [id, labId, labName, testName, date, status]
+      properties:
+        id: { type: integer }
+        labId: { type: integer }
+        labName: { type: string }
+        testName: { type: string }
+        date: { type: string }
+        time: { type: string }
+        status: { type: string }
+        homeCollection: { type: boolean }
+        resultUrl: { type: ["string", "null"] }
+
+    LabBookingInput:
+      type: object
+      required: [labId, testName, date, time]
+      properties:
+        labId: { type: integer }
+        testName: { type: string }
+        date: { type: string }
+        time: { type: string }
+        homeCollection: { type: boolean }
+
+    MoodLog:
+      type: object
+      required: [id, mood, score, date]
+      properties:
+        id: { type: integer }
+        mood: { type: string }
+        score: { type: integer }
+        notes: { type: ["string", "null"] }
+        date: { type: string }
+        factors: { type: array, items: { type: string } }
+
+    MoodLogInput:
+      type: object
+      required: [mood, score]
+      properties:
+        mood: { type: string }
+        score: { type: integer }
+        notes: { type: string }
+        factors: { type: array, items: { type: string } }
+
+    JournalEntry:
+      type: object
+      required: [id, title, content, date]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        content: { type: string }
+        date: { type: string }
+        mood: { type: ["string", "null"] }
+        tags: { type: array, items: { type: string } }
+
+    JournalEntryInput:
+      type: object
+      required: [title, content]
+      properties:
+        title: { type: string }
+        content: { type: string }
+        mood: { type: string }
+        tags: { type: array, items: { type: string } }
+
+    EmergencyContact:
+      type: object
+      required: [id, name, phone, relationship]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        phone: { type: string }
+        relationship: { type: string }
+
+    EmergencyContactInput:
+      type: object
+      required: [name, phone, relationship]
+      properties:
+        name: { type: string }
+        phone: { type: string }
+        relationship: { type: string }
+
+    BloodDonor:
+      type: object
+      required: [id, name, bloodGroup, county, phone, lastDonation]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        bloodGroup: { type: string }
+        county: { type: string }
+        phone: { type: string }
+        lastDonation: { type: ["string", "null"] }
+        donationCount: { type: integer }
+        available: { type: boolean }
+
+    BloodDonorInput:
+      type: object
+      required: [bloodGroup, county, phone]
+      properties:
+        bloodGroup: { type: string }
+        county: { type: string }
+        phone: { type: string }
+
+    BloodRequest:
+      type: object
+      required: [id, bloodGroup, unitsNeeded, hospital, urgency, status, createdAt]
+      properties:
+        id: { type: integer }
+        bloodGroup: { type: string }
+        unitsNeeded: { type: integer }
+        hospital: { type: string }
+        county: { type: string }
+        urgency: { type: string }
+        status: { type: string }
+        patientName: { type: ["string", "null"] }
+        contactPhone: { type: string }
+        createdAt: { type: string }
+
+    BloodRequestInput:
+      type: object
+      required: [bloodGroup, unitsNeeded, hospital, urgency, contactPhone]
+      properties:
+        bloodGroup: { type: string }
+        unitsNeeded: { type: integer }
+        hospital: { type: string }
+        county: { type: string }
+        urgency: { type: string }
+        patientName: { type: string }
+        contactPhone: { type: string }
+
+    DashboardSummary:
+      type: object
+      required: [healthScore, appointmentsThisMonth, medicationsActive, recordsCount, upcomingAppointments]
+      properties:
+        healthScore: { type: integer }
+        appointmentsThisMonth: { type: integer }
+        medicationsActive: { type: integer }
+        recordsCount: { type: integer }
+        upcomingAppointments: { type: integer }
+        moodAverage: { type: number }
+        waterGoalProgress: { type: number }
+
+    HealthScore:
+      type: object
+      required: [score, grade, breakdown, trend]
+      properties:
+        score: { type: integer }
+        grade: { type: string }
+        trend: { type: string }
+        breakdown:
+          type: object
+          properties:
+            fitness: { type: integer }
+            nutrition: { type: integer }
+            sleep: { type: integer }
+            mentalHealth: { type: integer }
+            preventiveCare: { type: integer }
+        recommendations:
+          type: array
+          items:
+            type: string
+
+    ActivityItem:
+      type: object
+      required: [id, type, title, description, timestamp, icon]
+      properties:
+        id: { type: integer }
+        type: { type: string }
+        title: { type: string }
+        description: { type: string }
+        timestamp: { type: string }
+        icon: { type: string }
+
+    VitalsTrend:
+      type: object
+      required: [entries]
+      properties:
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/VitalsEntry"
+
+    VitalsEntry:
+      type: object
+      required: [id, date]
+      properties:
+        id: { type: integer }
+        date: { type: string }
+        systolic: { type: ["integer", "null"] }
+        diastolic: { type: ["integer", "null"] }
+        heartRate: { type: ["integer", "null"] }
+        bloodSugar: { type: ["number", "null"] }
+        temperature: { type: ["number", "null"] }
+        oxygenSaturation: { type: ["integer", "null"] }
+        weight: { type: ["number", "null"] }
+
+    VitalsInput:
+      type: object
+      properties:
+        systolic: { type: integer }
+        diastolic: { type: integer }
+        heartRate: { type: integer }
+        bloodSugar: { type: number }
+        temperature: { type: number }
+        oxygenSaturation: { type: integer }
+        weight: { type: number }
+
+    WaterTracker:
+      type: object
+      required: [date, consumed, goal, percentage]
+      properties:
+        date: { type: string }
+        consumed: { type: number }
+        goal: { type: number }
+        percentage: { type: number }
+        logs:
+          type: array
+          items:
+            type: object
+            properties:
+              amount: { type: number }
+              time: { type: string }
+
+    WaterLogInput:
+      type: object
+      required: [amount]
+      properties:
+        amount: { type: number }

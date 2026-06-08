@@ -1,0 +1,1144 @@
+REPLIT AI MASTER PROMPT — MAWIBO SUPER HEALTH ECOSYSTEM
+
+Copy everything below into Replit AI.
+
+
+---
+
+SYSTEM ROLE
+
+You are a team of world-class engineers, healthcare software architects, UI/UX designers, AI specialists, cybersecurity experts, DevOps engineers, product managers, and healthcare consultants.
+
+Your task is to build MAWIBO, the largest, most advanced, AI-powered healthcare super app in Liberia and West Africa.
+
+This is not a demo.
+
+This is not an MVP.
+
+This is not a prototype.
+
+Build a production-ready enterprise healthcare ecosystem capable of serving:
+
+5,000,000+ users
+
+National healthcare institutions
+
+Hospitals
+
+Clinics
+
+Pharmacies
+
+Laboratories
+
+Insurance companies
+
+NGOs
+
+Government agencies
+
+Community health workers
+
+Telemedicine providers
+
+
+The system must be scalable across Africa.
+
+
+---
+
+APP NAME
+
+MAWIBO
+
+Meaning
+
+MAWIBO = My AI Wellness & Better Outcomes
+
+
+---
+
+APP MISSION
+
+To become the digital healthcare backbone of Liberia by connecting every citizen to healthcare services through one intelligent platform.
+
+
+---
+
+BRAND IDENTITY
+
+Primary Color: #5DADE2
+
+Secondary Color: #0B3D91
+
+White: #FFFFFF
+
+Success: #2ECC71
+
+Warning: #F39C12
+
+Danger: #E74C3C
+
+Dark Background: #0D1117
+
+Card Background: #161B22
+
+
+---
+
+DESIGN REQUIREMENTS
+
+Create a stunning premium experience.
+
+Design quality should exceed:
+
+Apple Health
+
+Babylon Health
+
+Practo
+
+Ada
+
+BetterHelp
+
+Fitbit
+
+MyChart
+
+
+Use:
+
+Material 3
+
+Glassmorphism
+
+Smooth animations
+
+Premium shadows
+
+Soft gradients
+
+Large modern cards
+
+Rounded corners
+
+Interactive charts
+
+Skeleton loading
+
+Haptic feedback
+
+Swipe gestures
+
+
+
+---
+
+CORE APP MODULES
+
+Build ALL modules fully.
+
+
+---
+
+AUTHENTICATION SYSTEM
+
+Email Login
+
+Phone Login
+
+OTP Verification
+
+Google Login
+
+Apple Login
+
+Facebook Login
+
+Fingerprint Login
+
+Face ID
+
+PIN Login
+
+Multi-device support
+
+Session management
+
+Account recovery
+
+
+
+---
+
+SMART USER ONBOARDING
+
+Collect:
+
+Name
+
+Gender
+
+Age
+
+Weight
+
+Height
+
+Blood Group
+
+Allergies
+
+Medical Conditions
+
+Emergency Contacts
+
+Insurance Information
+
+
+Generate:
+
+Personal Health Score
+
+Health Risk Profile
+
+Wellness Recommendations
+
+
+
+---
+
+HOME DASHBOARD
+
+Display:
+
+Personalized greeting
+
+Weather
+
+AI health tip
+
+Daily affirmation
+
+Health score
+
+Upcoming appointments
+
+Medication reminders
+
+Water tracker
+
+Mood tracker
+
+Activity tracker
+
+Recent health records
+
+Emergency shortcut
+
+
+
+---
+
+MAWIBO AI HEALTH MATE
+
+Create a powerful AI assistant.
+
+Capabilities:
+
+Symptom Analysis
+
+Ask follow-up questions
+
+Risk assessment
+
+Triage suggestions
+
+Specialist recommendations
+
+
+Medical Education
+
+Diseases
+
+Conditions
+
+Treatments
+
+
+Medication Guidance
+
+Drug information
+
+Side effects
+
+Dosage reminders
+
+
+Mental Health Support
+
+Anxiety coaching
+
+Stress reduction
+
+Emotional support
+
+
+Nutrition Coach
+
+Meal planning
+
+Calorie recommendations
+
+Weight management
+
+
+Fitness Coach
+
+Exercise recommendations
+
+Goal tracking
+
+
+Maternal Assistant
+
+Pregnancy support
+
+Child care support
+
+
+Voice Assistant
+
+Voice conversations
+
+Voice commands
+
+
+Image Analysis
+
+Analyze:
+
+Skin issues
+
+Medication labels
+
+Prescriptions
+
+Lab reports
+
+
+
+---
+
+AI HUB
+
+Build 50+ AI TOOLS
+
+Examples:
+
+Symptom Checker
+
+Drug Interaction Checker
+
+Mental Health Coach
+
+Medical Translator
+
+Pregnancy Assistant
+
+Nutrition Planner
+
+Fitness Planner
+
+Disease Predictor
+
+Health Risk Calculator
+
+Sleep Optimizer
+
+Water Intake Calculator
+
+BMI Calculator
+
+Stress Analyzer
+
+Mood Predictor
+
+Prescription Reader
+
+Medical OCR
+
+Lab Result Interpreter
+
+Doctor Finder
+
+Insurance Advisor
+
+Emergency Assistant
+
+
+
+---
+
+TELEMEDICINE
+
+Real-time consultations.
+
+Features:
+
+HD Video Calls
+
+Audio Calls
+
+Chat
+
+Screen Sharing
+
+File Sharing
+
+Consultation Notes
+
+Prescriptions
+
+Follow-ups
+
+Session Recording
+
+Consultation History
+
+
+
+---
+
+DOCTOR MARKETPLACE
+
+Search doctors by:
+
+Specialty
+
+Hospital
+
+County
+
+City
+
+Rating
+
+Language
+
+Availability
+
+Consultation fee
+
+
+Support:
+
+Online consultation
+
+Physical appointments
+
+
+
+---
+
+HOSPITAL DIRECTORY
+
+Comprehensive hospital database.
+
+Show:
+
+Services
+
+Doctors
+
+Departments
+
+Contact info
+
+Ratings
+
+Reviews
+
+Maps
+
+Navigation
+
+
+
+---
+
+DIGITAL HEALTH RECORDS
+
+Lifetime patient records.
+
+Store:
+
+Diagnoses
+
+Prescriptions
+
+Lab Results
+
+Imaging
+
+Vaccinations
+
+Surgeries
+
+Allergies
+
+Insurance
+
+Family History
+
+
+Features:
+
+QR Health Card
+
+PDF Export
+
+Secure Sharing
+
+Emergency Access
+
+
+
+---
+
+PHARMACY ECOSYSTEM
+
+Features:
+
+Medicine Search
+
+Prescription Upload
+
+Price Comparison
+
+Availability Check
+
+Home Delivery
+
+Refill Requests
+
+Inventory Management
+
+
+
+---
+
+LABORATORY NETWORK
+
+Features:
+
+Test Booking
+
+Home Collection
+
+Result Upload
+
+Doctor Sharing
+
+Historical Tracking
+
+PDF Reports
+
+
+
+---
+
+MENTAL HEALTH CENTER
+
+Build a complete wellness ecosystem.
+
+Include:
+
+Mood Insights
+
+Daily Check-In
+
+CBT Assistant
+
+Anxiety Relief
+
+Gratitude Journal
+
+Breathing Exercises
+
+Meditation
+
+Sleep Coach
+
+Stress Management
+
+Burnout Assessment
+
+Therapy Booking
+
+
+
+---
+
+WOMEN'S HEALTH
+
+Period Tracking
+
+Fertility Tracking
+
+Pregnancy Tracking
+
+Prenatal Care
+
+Postnatal Care
+
+Maternal Education
+
+Vaccination Tracking
+
+
+
+---
+
+CHILD HEALTH
+
+Growth Charts
+
+Vaccination Schedule
+
+Milestones
+
+Pediatric Consultations
+
+Nutrition Monitoring
+
+
+
+---
+
+CHRONIC DISEASE MANAGEMENT
+
+Support:
+
+Diabetes
+
+Hypertension
+
+Asthma
+
+Heart Disease
+
+Kidney Disease
+
+
+Track:
+
+Medication
+
+Trends
+
+Reports
+
+Alerts
+
+
+
+---
+
+FITNESS & WELLNESS
+
+Features:
+
+Step Counter
+
+Sleep Tracking
+
+Calorie Tracking
+
+Water Tracking
+
+Weight Tracking
+
+BMI
+
+Workout Plans
+
+Health Goals
+
+
+
+---
+
+EMERGENCY SYSTEM
+
+Critical feature.
+
+One-tap SOS.
+
+Functions:
+
+GPS Sharing
+
+Ambulance Requests
+
+Emergency Contacts
+
+Nearest Hospital
+
+Medical Emergency Profile
+
+Panic Button
+
+Disaster Alerts
+
+
+
+---
+
+BLOOD BANK PLATFORM
+
+Features:
+
+Donor Registration
+
+Blood Requests
+
+Blood Matching
+
+Nearby Donors
+
+Donation Rewards
+
+Blood Availability Dashboard
+
+
+
+---
+
+HEALTH INSURANCE MODULE
+
+Features:
+
+Digital Insurance Card
+
+Coverage Verification
+
+Claims Submission
+
+Claim Tracking
+
+Premium Payments
+
+
+
+---
+
+COMMUNITY HEALTH PLATFORM
+
+Features:
+
+Health Forums
+
+Support Groups
+
+Community Discussions
+
+NGO Programs
+
+Public Health Campaigns
+
+Success Stories
+
+
+
+---
+
+HEALTH EDUCATION HUB
+
+Provide:
+
+Articles
+
+Videos
+
+Podcasts
+
+Health Courses
+
+Disease Awareness
+
+Maternal Health Content
+
+Mental Health Content
+
+
+
+---
+
+LIBERIA HEALTH MAP
+
+Interactive GIS Map.
+
+Display:
+
+Hospitals
+
+Clinics
+
+Pharmacies
+
+Laboratories
+
+Ambulances
+
+Blood Banks
+
+NGOs
+
+
+
+---
+
+NATIONAL DISEASE SURVEILLANCE CENTER
+
+Track:
+
+Malaria
+
+Cholera
+
+Typhoid
+
+Tuberculosis
+
+HIV/AIDS
+
+COVID
+
+Mpox
+
+
+Provide:
+
+Heatmaps
+
+Analytics
+
+Forecasts
+
+Reporting Dashboard
+
+
+
+---
+
+PAYMENTS
+
+Integrate:
+
+Liberia
+
+Orange Money
+
+MTN Mobile Money
+
+
+International
+
+Visa
+
+Mastercard
+
+Stripe
+
+PayPal
+
+
+Features:
+
+Wallet
+
+Receipts
+
+Invoices
+
+Subscription Billing
+
+
+
+---
+
+NOTIFICATION SYSTEM
+
+Support:
+
+Push Notifications
+
+SMS
+
+Email
+
+In-App Notifications
+
+
+For:
+
+Appointments
+
+Medication Reminders
+
+Health Tips
+
+Emergency Alerts
+
+
+
+---
+
+ADMIN ECOSYSTEM
+
+Create separate dashboards.
+
+
+---
+
+SUPER ADMIN
+
+National Statistics
+
+User Management
+
+Provider Management
+
+Revenue Analytics
+
+Disease Surveillance
+
+Audit Logs
+
+
+
+---
+
+HOSPITAL ADMIN
+
+Doctor Management
+
+Department Management
+
+Appointment Management
+
+Revenue
+
+
+
+---
+
+DOCTOR DASHBOARD
+
+Patients
+
+Appointments
+
+Prescriptions
+
+Telemedicine
+
+
+
+---
+
+PHARMACY DASHBOARD
+
+Inventory
+
+Orders
+
+Revenue
+
+
+
+---
+
+LAB DASHBOARD
+
+Tests
+
+Reports
+
+Bookings
+
+
+
+---
+
+OFFLINE-FIRST ARCHITECTURE
+
+The app must function even with poor internet.
+
+Use:
+
+Local database caching
+
+Background sync
+
+Offline records
+
+Offline emergency card
+
+
+
+---
+
+SECURITY
+
+Implement enterprise-grade security.
+
+Include:
+
+End-to-end encryption
+
+AES-256 encryption
+
+JWT Authentication
+
+MFA
+
+Audit Trails
+
+Role-based access control
+
+Secure APIs
+
+Data Backups
+
+Device Security
+
+
+
+---
+
+PERFORMANCE
+
+Target:
+
+App launch under 2 seconds
+
+60 FPS animations
+
+Optimized database queries
+
+Lazy loading
+
+Infinite scrolling
+
+CDN optimization
+
+
+
+---
+
+DATABASE
+
+Generate complete PostgreSQL schema.
+
+Create all tables.
+
+Create relationships.
+
+Create indexes.
+
+Create policies.
+
+Create Supabase RLS.
+
+
+---
+
+DELIVERABLES
+
+Generate:
+
+1. Full Flutter source code
+
+
+2. Complete Supabase backend
+
+
+3. Database schema
+
+
+4. Authentication system
+
+
+5. AI integration
+
+
+6. Push notification system
+
+
+7. Payment integration
+
+
+8. Telemedicine platform
+
+
+9. Hospital management module
+
+
+10. Pharmacy management module
+
+
+11. Laboratory management module
+
+
+12. Insurance module
+
+
+13. Emergency module
+
+
+14. Disease surveillance module
+
+
+15. Admin dashboards
+
+
+16. API documentation
+
+
+17. Deployment guide
+
+
+18. Production environment configuration
+
+
+19. CI/CD pipeline
+
+
+20. Unit tests
+
+
+21. Integration tests
+
+
+22. Clean architecture
+
+
+23. Feature-based folder structure
+
+
+24. Dark mode
+
+
+25. Light mode
+
+
+
+
+---
+
+FINAL INSTRUCTION
+
+Build MAWIBO as if it is being launched nationally by the Ministry of Health of Liberia and expected to become the largest healthcare platform in Africa. Generate production-quality code, architecture, database design, security, dashboards, APIs, and UI/UX. Do not simplify features. Build every module completely and professionally. Start by generating the full project architecture, database schema, Flutter folder structure, Supabase backend setup, and implementation roadmap.
