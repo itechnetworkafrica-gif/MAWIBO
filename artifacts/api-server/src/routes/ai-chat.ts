@@ -1,22 +1,42 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { chatSessionsTable, chatMessagesTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
+import OpenAI from "openai";
 
 const router = Router();
 const DEFAULT_USER_ID = 1;
+
+const openai = new OpenAI({ apiKey: process.env["OPENAI_API_KEY"] });
+
+const SYSTEM_PROMPT = `You are MAWIBO Health Mate, an expert AI health assistant for Liberia and West Africa. You are knowledgeable about:
+- Tropical diseases common in West Africa: malaria, typhoid, cholera, tuberculosis, HIV, hepatitis
+- Local healthcare facilities in Liberia (JFK Medical Center, Redemption Hospital, Phebe Hospital, ELWA Hospital)
+- Liberian health context, culture, and available treatments
+- General medicine, symptoms, medications, nutrition, and wellness
+- When to refer patients to emergency care vs. routine visits
+
+Guidelines:
+- Always be empathetic, clear, and culturally sensitive
+- For emergencies (chest pain, stroke symptoms, severe bleeding, difficulty breathing), ALWAYS advise immediate emergency care first
+- Do not diagnose definitively — recommend professional consultation for serious concerns
+- Reference local Liberian hospitals and resources when relevant
+- Keep responses concise but thorough (2-4 paragraphs max)
+- Use simple, accessible language appropriate for a general audience`;
 
 router.get("/sessions", async (req, res) => {
   try {
     const sessions = await db.select().from(chatSessionsTable)
       .where(eq(chatSessionsTable.userId, DEFAULT_USER_ID))
-      .orderBy(chatSessionsTable.createdAt);
+      .orderBy(desc(chatSessionsTable.createdAt));
     const result = await Promise.all(sessions.map(async (s) => {
-      const messages = await db.select().from(chatMessagesTable).where(eq(chatMessagesTable.sessionId, s.id));
+      const messages = await db.select().from(chatMessagesTable)
+        .where(eq(chatMessagesTable.sessionId, s.id))
+        .orderBy(desc(chatMessagesTable.createdAt))
+        .limit(1);
       return {
         ...s,
-        messageCount: messages.length,
-        lastMessage: messages.length > 0 ? messages[messages.length - 1].content.slice(0, 80) : null,
+        lastMessage: messages[0]?.content?.slice(0, 80) ?? null,
       };
     }));
     res.json(result);
@@ -50,25 +70,6 @@ router.get("/sessions/:id/messages", async (req, res) => {
   }
 });
 
-const AI_RESPONSES: Record<string, string> = {
-  default: "Thank you for sharing that with me. Based on what you've described, I'd recommend consulting with a healthcare professional for a proper evaluation. In the meantime, make sure to stay hydrated and get adequate rest.",
-  headache: "Headaches can have many causes including dehydration, stress, poor sleep, or eye strain. If your headache is severe, sudden, or accompanied by fever or stiff neck, please seek immediate medical attention. Otherwise, try resting in a quiet dark room and staying well hydrated.",
-  fever: "A fever is your body's natural defense against infection. For adults, a temperature above 38.5°C (101.3°F) warrants attention. Stay hydrated, rest, and take paracetamol if needed. Seek immediate care if fever exceeds 40°C (104°F) or is accompanied by difficulty breathing.",
-  cough: "Coughs can be caused by infections, allergies, or environmental factors. Stay hydrated, use honey for soothing, and avoid irritants. A persistent cough lasting more than 3 weeks or accompanied by blood should be evaluated by a doctor.",
-  malaria: "Malaria is common in Liberia. Symptoms include fever, chills, headache, and fatigue. If you suspect malaria, please visit a healthcare facility immediately for a rapid diagnostic test. Early treatment is crucial. We can help you find the nearest clinic.",
-  diabetes: "Managing diabetes requires regular monitoring of blood sugar, a healthy diet, regular exercise, and medication adherence. It's important to track your readings daily. Would you like me to help you log your blood sugar or find a diabetes specialist near you?",
-};
-
-function generateAIResponse(userMessage: string): string {
-  const lower = userMessage.toLowerCase();
-  if (lower.includes("headache") || lower.includes("head pain")) return AI_RESPONSES.headache;
-  if (lower.includes("fever") || lower.includes("temperature")) return AI_RESPONSES.fever;
-  if (lower.includes("cough")) return AI_RESPONSES.cough;
-  if (lower.includes("malaria")) return AI_RESPONSES.malaria;
-  if (lower.includes("diabetes") || lower.includes("blood sugar")) return AI_RESPONSES.diabetes;
-  return AI_RESPONSES.default;
-}
-
 router.post("/sessions/:id/messages", async (req, res) => {
   try {
     const sessionId = parseInt(req.params.id);
@@ -76,13 +77,43 @@ router.post("/sessions/:id/messages", async (req, res) => {
 
     await db.insert(chatMessagesTable).values({ sessionId, role: "user", content });
 
-    const aiContent = generateAIResponse(content);
-    const [aiMessage] = await db.insert(chatMessagesTable).values({ sessionId, role: "assistant", content: aiContent }).returning();
+    const history = await db.select().from(chatMessagesTable)
+      .where(eq(chatMessagesTable.sessionId, sessionId))
+      .orderBy(chatMessagesTable.createdAt)
+      .limit(20);
 
-    res.json(aiMessage);
+    const messages = [
+      { role: "system" as const, content: SYSTEM_PROMPT },
+      ...history.map(m => ({ role: m.role as "user" | "assistant", content: m.content })),
+    ];
+
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
+    const stream = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages,
+      stream: true,
+      max_tokens: 1024,
+    });
+
+    let fullResponse = "";
+    for await (const chunk of stream) {
+      const text = chunk.choices[0]?.delta?.content;
+      if (text) {
+        fullResponse += text;
+        res.write(`data: ${JSON.stringify({ content: text })}\n\n`);
+      }
+    }
+
+    await db.insert(chatMessagesTable).values({ sessionId, role: "assistant", content: fullResponse });
+    res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+    res.end();
   } catch (err) {
     req.log.error({ err }, "sendChatMessage error");
-    res.status(500).json({ error: "Internal server error" });
+    res.write(`data: ${JSON.stringify({ error: "AI service error" })}\n\n`);
+    res.end();
   }
 });
 
