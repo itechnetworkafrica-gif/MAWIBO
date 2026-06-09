@@ -2,16 +2,17 @@ import { ReactNode, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   Home, MessageSquareHeart, UserRound, Calendar, FileText, Pill,
-  Building2, TestTube, Brain, Droplet, Siren, User, LogOut, Menu,
+  Building2, TestTube, Brain, Droplet, Siren, LogOut, Menu,
   Shield, Syringe, Dumbbell, Apple, Baby, Heart, Trophy, Users,
-  BookOpen, Activity, Bot, Video, X, ChevronRight, Zap
+  BookOpen, Activity, Bot, Video, ChevronRight, Zap, Sun, Moon,
+  Bell, Search, X,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useTheme } from "@/hooks/use-theme";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-
 import logoUrl from "@assets/file_0000000066e071fda913e7e9c0fbbd82_1780941341572.png";
 
 interface AppLayoutProps { children: ReactNode; }
@@ -22,7 +23,7 @@ const navGroups = [
     items: [
       { href: "/dashboard", label: "Dashboard", icon: Home },
       { href: "/ai-chat", label: "AI Health Mate", icon: MessageSquareHeart, badge: "AI" },
-      { href: "/ai-hub", label: "AI Super Hub", icon: Bot, badge: "20+ AI" },
+      { href: "/ai-hub", label: "AI Super Hub", icon: Bot, badge: "20+" },
     ],
   },
   {
@@ -52,7 +53,7 @@ const navGroups = [
       { href: "/nutrition", label: "Nutrition", icon: Apple },
       { href: "/womens-health", label: "Women's Health", icon: Heart },
       { href: "/child-health", label: "Child Health", icon: Baby },
-      { href: "/disease-management", label: "Disease Management", icon: Activity },
+      { href: "/disease-management", label: "Disease Mgmt", icon: Activity },
     ],
   },
   {
@@ -74,12 +75,11 @@ const navGroups = [
   {
     label: "Emergency",
     items: [
-      { href: "/emergency", label: "Emergency", icon: Siren },
+      { href: "/emergency", label: "Emergency SOS", icon: Siren },
     ],
   },
 ];
 
-// Bottom nav for mobile (most important items only)
 const mobileNav = [
   { href: "/dashboard", label: "Home", icon: Home },
   { href: "/ai-hub", label: "AI Hub", icon: Bot },
@@ -88,37 +88,74 @@ const mobileNav = [
   { href: "/emergency", label: "SOS", icon: Siren },
 ];
 
+function ThemeToggle() {
+  const { theme, toggleTheme } = useTheme();
+  return (
+    <button
+      onClick={toggleTheme}
+      className="p-2 rounded-xl transition-colors hover:bg-sidebar-accent text-sidebar-foreground/80 hover:text-sidebar-foreground"
+      aria-label="Toggle theme"
+    >
+      {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+    </button>
+  );
+}
+
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const [location] = useLocation();
   const { logout } = useAuth();
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Logo */}
-      <div className="p-4 border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <img src={logoUrl} alt="MAWIBO" className="h-8 object-contain" />
-          <div>
-            <p className="font-bold text-sm">MAWIBO</p>
-            <p className="text-xs text-muted-foreground">Health OS</p>
+    <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
+      {/* Logo + Theme Toggle */}
+      <div className="p-4 border-b border-sidebar-border flex items-center justify-between">
+        <Link href="/dashboard" onClick={onNavigate}>
+          <div className="flex items-center gap-2.5 cursor-pointer">
+            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0 backdrop-blur-sm">
+              <img src={logoUrl} alt="MAWIBO" className="h-5 object-contain" />
+            </div>
+            <div>
+              <p className="font-bold text-sm text-sidebar-foreground leading-none">MAWIBO</p>
+              <p className="text-xs text-sidebar-foreground/60 leading-none mt-0.5">Health OS</p>
+            </div>
           </div>
-        </div>
+        </Link>
+        <ThemeToggle />
       </div>
 
       {/* Nav Groups */}
-      <div className="flex-1 overflow-y-auto py-2 scrollbar-none">
+      <div className="flex-1 overflow-y-auto py-3 scrollbar-none px-2">
         {navGroups.map((group) => (
-          <div key={group.label} className="mb-1">
-            <p className="text-xs text-muted-foreground/60 font-semibold uppercase tracking-wider px-4 py-2">{group.label}</p>
+          <div key={group.label} className="mb-2">
+            <p className="text-xs text-sidebar-foreground/50 font-semibold uppercase tracking-wider px-3 py-1.5">
+              {group.label}
+            </p>
             {group.items.map((item) => {
-              const isActive = location === item.href || (item.href !== "/dashboard" && location.startsWith(item.href));
+              const isActive =
+                location === item.href ||
+                (item.href !== "/dashboard" && location.startsWith(item.href));
+              const isEmergency = item.href === "/emergency";
               return (
                 <Link key={item.href} href={item.href} onClick={onNavigate}>
-                  <div className={`flex items-center gap-3 px-4 py-2 mx-2 rounded-lg cursor-pointer transition-all group ${isActive ? "bg-primary/15 text-primary" : "text-muted-foreground hover:text-foreground hover:bg-white/5"}`}>
-                    <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-primary" : "group-hover:text-foreground"}`} />
-                    <span className="text-sm font-medium flex-1">{item.label}</span>
+                  <div
+                    className={`flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-all mb-0.5 group ${
+                      isEmergency
+                        ? "bg-red-500/20 text-red-200 hover:bg-red-500/30"
+                        : isActive
+                        ? "bg-white/20 text-sidebar-foreground font-semibold shadow-sm"
+                        : "text-sidebar-foreground/70 hover:bg-white/10 hover:text-sidebar-foreground"
+                    }`}
+                  >
+                    <item.icon
+                      className={`w-4 h-4 flex-shrink-0 ${
+                        isEmergency ? "text-red-300" : isActive ? "text-sidebar-foreground" : "text-sidebar-foreground/60 group-hover:text-sidebar-foreground"
+                      }`}
+                    />
+                    <span className="text-sm flex-1 truncate">{item.label}</span>
                     {item.badge && (
-                      <Badge className={`text-xs px-1.5 py-0 border-0 ${isActive ? "bg-primary/30 text-primary" : "bg-primary/20 text-primary"}`}>{item.badge}</Badge>
+                      <Badge className="text-[10px] px-1.5 py-0 h-4 border-0 bg-white/20 text-sidebar-foreground font-medium">
+                        {item.badge}
+                      </Badge>
                     )}
                   </div>
                 </Link>
@@ -128,21 +165,26 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         ))}
       </div>
 
-      {/* Bottom: Profile + Logout */}
-      <div className="p-3 border-t border-white/5">
+      {/* Profile + Logout */}
+      <div className="p-3 border-t border-sidebar-border">
         <Link href="/profile" onClick={onNavigate}>
-          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors mb-1">
-            <Avatar className="w-8 h-8 bg-primary/20">
-              <AvatarFallback className="text-xs text-primary font-bold bg-primary/20">AJ</AvatarFallback>
+          <div className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/10 cursor-pointer transition-colors mb-1">
+            <Avatar className="w-8 h-8 flex-shrink-0">
+              <AvatarFallback className="text-xs font-bold bg-white/20 text-sidebar-foreground">
+                AJ
+              </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">Amara Johnson</p>
-              <p className="text-xs text-muted-foreground truncate">Montserrado</p>
+              <p className="text-sm font-semibold truncate text-sidebar-foreground">Amara Johnson</p>
+              <p className="text-xs text-sidebar-foreground/60 truncate">Montserrado County</p>
             </div>
-            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+            <ChevronRight className="w-3.5 h-3.5 text-sidebar-foreground/50 flex-shrink-0" />
           </div>
         </Link>
-        <button onClick={logout} className="flex items-center gap-3 px-2 py-2 w-full rounded-lg hover:bg-red-500/10 hover:text-red-400 text-muted-foreground text-sm transition-colors">
+        <button
+          onClick={logout}
+          className="flex items-center gap-3 px-3 py-2 w-full rounded-xl hover:bg-red-500/20 hover:text-red-300 text-sidebar-foreground/60 text-sm transition-colors"
+        >
           <LogOut className="w-4 h-4" />
           <span>Log Out</span>
         </button>
@@ -154,34 +196,66 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 export function AppLayout({ children }: AppLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [location] = useLocation();
+  const { theme, toggleTheme } = useTheme();
+
+  const currentPage = navGroups
+    .flatMap(g => g.items)
+    .find(i => location === i.href || (i.href !== "/dashboard" && location.startsWith(i.href)));
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-60 glass-panel border-r border-white/5 flex-shrink-0">
+      <aside className="hidden md:flex flex-col w-60 flex-shrink-0 shadow-xl">
         <SidebarContent />
       </aside>
 
       {/* Mobile Drawer */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="p-0 w-64 bg-card border-white/10">
+        <SheetContent side="left" className="p-0 w-64 border-0">
           <SidebarContent onNavigate={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Mobile Header */}
-        <header className="md:hidden flex items-center justify-between p-4 border-b border-white/5 bg-background/80 backdrop-blur-xl flex-shrink-0">
-          <button onClick={() => setMobileOpen(true)} className="p-2 rounded-lg hover:bg-white/5 transition-colors">
-            <Menu className="w-5 h-5" />
-          </button>
-          <img src={logoUrl} alt="MAWIBO" className="h-7 object-contain" />
-          <Link href="/profile">
-            <Avatar className="w-8 h-8 bg-primary/20 cursor-pointer">
-              <AvatarFallback className="text-xs text-primary font-bold bg-primary/20">AJ</AvatarFallback>
-            </Avatar>
-          </Link>
+        {/* Top Header Bar (always visible) */}
+        <header className="flex items-center justify-between px-4 h-14 border-b border-border bg-sidebar text-sidebar-foreground flex-shrink-0 shadow-sm">
+          {/* Mobile: hamburger + logo */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="md:hidden p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+            >
+              <Menu className="w-5 h-5 text-sidebar-foreground" />
+            </button>
+            <div className="md:hidden">
+              <img src={logoUrl} alt="MAWIBO" className="h-6 object-contain" />
+            </div>
+            {/* Desktop: page title */}
+            <div className="hidden md:block">
+              <p className="font-semibold text-sm text-sidebar-foreground">
+                {currentPage?.label ?? "MAWIBO"}
+              </p>
+            </div>
+          </div>
+
+          {/* Right side actions */}
+          <div className="flex items-center gap-1">
+            <button className="p-2 rounded-xl hover:bg-white/10 transition-colors relative">
+              <Bell className="w-4 h-4 text-sidebar-foreground/80" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-red-400" />
+            </button>
+            <div className="md:hidden">
+              <ThemeToggle />
+            </div>
+            <Link href="/profile">
+              <Avatar className="w-7 h-7 cursor-pointer ml-1">
+                <AvatarFallback className="text-[10px] font-bold bg-white/20 text-sidebar-foreground">
+                  AJ
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+          </div>
         </header>
 
         {/* Page Content */}
@@ -190,16 +264,24 @@ export function AppLayout({ children }: AppLayoutProps) {
         </main>
 
         {/* Mobile Bottom Nav */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/90 backdrop-blur-xl border-t border-white/10 z-40">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border z-40">
           <div className="flex items-center justify-around px-2 py-2">
             {mobileNav.map((item) => {
               const isActive = location === item.href;
               const isEmergency = item.href === "/emergency";
               return (
                 <Link key={item.href} href={item.href}>
-                  <div className={`flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl cursor-pointer transition-all ${isEmergency ? "bg-red-500/20 text-red-400" : isActive ? "text-primary" : "text-muted-foreground"}`}>
-                    <item.icon className={`w-5 h-5 ${isEmergency ? "text-red-400" : ""}`} />
-                    <span className="text-xs">{item.label}</span>
+                  <div
+                    className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl cursor-pointer transition-all ${
+                      isEmergency
+                        ? "bg-red-500/15 text-red-500"
+                        : isActive
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    <span className="text-[10px] font-medium">{item.label}</span>
                   </div>
                 </Link>
               );

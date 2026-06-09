@@ -3,12 +3,16 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { ThemeProvider } from "@/hooks/use-theme";
 import NotFound from "@/pages/not-found";
 
 import { ProtectedRoute } from "@/components/protected-route";
 
-// Core pages
+// Auth pages
 import Login from "@/pages/login";
+import Register from "@/pages/register";
+
+// Core pages
 import Dashboard from "@/pages/dashboard";
 import Emergency from "@/pages/emergency";
 import Profile from "@/pages/profile";
@@ -70,6 +74,7 @@ function Router() {
     <Switch>
       <Route path="/" component={RootRoute} />
       <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
 
       {/* Core */}
       <Route path="/dashboard"><P><Dashboard /></P></Route>
@@ -119,16 +124,18 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <AuthProvider>
-            <Router />
-          </AuthProvider>
-        </WouterRouter>
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <AuthProvider>
+              <Router />
+            </AuthProvider>
+          </WouterRouter>
+          <Toaster />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 

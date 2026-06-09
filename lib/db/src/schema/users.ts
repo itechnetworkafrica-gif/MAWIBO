@@ -12,6 +12,7 @@ export const usersTable = pgTable("users", {
   dateOfBirth: date("date_of_birth", { mode: "string" }),
   gender: text("gender"),
   avatarUrl: text("avatar_url"),
+  passwordHash: text("password_hash"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
