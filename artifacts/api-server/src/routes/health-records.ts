@@ -6,7 +6,7 @@ import { eq, and } from "drizzle-orm";
 const router = Router();
 const DEFAULT_USER_ID = 1;
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res): Promise<void> => {
   try {
     const { type } = req.query as Record<string, string>;
     const conditions = [eq(healthRecordsTable.userId, DEFAULT_USER_ID)];
@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res): Promise<void> => {
   try {
     const { type, title, date, provider, description, tags } = req.body;
     const [record] = await db.insert(healthRecordsTable).values({
@@ -32,11 +32,14 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res): Promise<void> => {
   try {
     const id = parseInt(req.params.id);
     const record = await db.query.healthRecordsTable.findFirst({ where: eq(healthRecordsTable.id, id) });
-    if (!record) return res.status(404).json({ error: "Not found" });
+    if (!record) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
     res.json(record);
   } catch (err) {
     req.log.error({ err }, "getHealthRecord error");
@@ -44,7 +47,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res): Promise<void> => {
   try {
     const id = parseInt(req.params.id);
     await db.delete(healthRecordsTable).where(eq(healthRecordsTable.id, id));

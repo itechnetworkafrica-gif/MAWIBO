@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 const router = Router();
 const DEFAULT_USER_ID = 1;
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res): Promise<void> => {
   try {
     const labs = await db.select().from(labsTable);
     res.json(labs);
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/bookings", async (req, res) => {
+router.get("/bookings", async (req, res): Promise<void> => {
   try {
     const bookings = await db.select().from(labBookingsTable).where(eq(labBookingsTable.userId, DEFAULT_USER_ID));
     res.json(bookings);
@@ -26,11 +26,14 @@ router.get("/bookings", async (req, res) => {
   }
 });
 
-router.post("/bookings", async (req, res) => {
+router.post("/bookings", async (req, res): Promise<void> => {
   try {
     const { labId, testName, date, time, homeCollection } = req.body;
     const lab = await db.query.labsTable.findFirst({ where: eq(labsTable.id, labId) });
-    if (!lab) return res.status(404).json({ error: "Lab not found" });
+    if (!lab) {
+      res.status(404).json({ error: "Lab not found" });
+      return;
+    }
     const [booking] = await db.insert(labBookingsTable).values({
       userId: DEFAULT_USER_ID,
       labId,

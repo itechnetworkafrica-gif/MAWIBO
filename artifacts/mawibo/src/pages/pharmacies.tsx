@@ -14,8 +14,9 @@ export default function Pharmacies() {
   
   const { data: pharmacies, isLoading: isLoadingPharmacies } = useListPharmacies();
   const { data: medicines, isLoading: isLoadingMedicines } = useSearchMedicines(
-    { query: search || undefined }, 
-    { query: { enabled: tab === "medicines" } }
+    { query: search || undefined },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    { query: { enabled: tab === "medicines" } as any }
   );
 
   return (

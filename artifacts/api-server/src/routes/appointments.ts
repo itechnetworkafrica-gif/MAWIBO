@@ -6,7 +6,7 @@ import { eq, and, gte } from "drizzle-orm";
 const router = Router();
 const DEFAULT_USER_ID = 1;
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res): Promise<void> => {
   try {
     const { status } = req.query as Record<string, string>;
     const conditions = [eq(appointmentsTable.userId, DEFAULT_USER_ID)];
@@ -19,11 +19,14 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res): Promise<void> => {
   try {
     const { doctorId, date, time, type, notes } = req.body;
     const doctor = await db.query.doctorsTable.findFirst({ where: eq(doctorsTable.id, doctorId) });
-    if (!doctor) return res.status(404).json({ error: "Doctor not found" });
+    if (!doctor) {
+      res.status(404).json({ error: "Doctor not found" });
+      return;
+    }
     const [appointment] = await db.insert(appointmentsTable).values({
       userId: DEFAULT_USER_ID,
       doctorId,
@@ -44,7 +47,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/upcoming", async (req, res) => {
+router.get("/upcoming", async (req, res): Promise<void> => {
   try {
     const today = new Date().toISOString().split("T")[0];
     const appointments = await db.select().from(appointmentsTable)
@@ -62,11 +65,14 @@ router.get("/upcoming", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res): Promise<void> => {
   try {
     const id = parseInt(req.params.id);
     const appointment = await db.query.appointmentsTable.findFirst({ where: eq(appointmentsTable.id, id) });
-    if (!appointment) return res.status(404).json({ error: "Not found" });
+    if (!appointment) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
     res.json(appointment);
   } catch (err) {
     req.log.error({ err }, "getAppointment error");
@@ -74,12 +80,15 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", async (req, res): Promise<void> => {
   try {
     const id = parseInt(req.params.id);
     const { status, date, time, notes } = req.body;
     const [updated] = await db.update(appointmentsTable).set({ status, date, time, notes }).where(eq(appointmentsTable.id, id)).returning();
-    if (!updated) return res.status(404).json({ error: "Not found" });
+    if (!updated) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
     res.json(updated);
   } catch (err) {
     req.log.error({ err }, "updateAppointment error");

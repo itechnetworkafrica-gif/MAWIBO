@@ -1,11 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import {
-  usersTable,
-  healthProfilesTable,
-} from "@workspace/db";
+import { usersTable, healthProfilesTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { logger } from "../lib/logger";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 
@@ -27,20 +23,23 @@ async function verifyPassword(stored: string, supplied: string): Promise<boolean
   return timingSafeEqual(hashBuffer, suppliedHash);
 }
 
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res): Promise<void> => {
   try {
     const { name, email, password, phone, county, city } = req.body;
     if (!name || !email || !password) {
-      return res.status(400).json({ error: "Name, email, and password are required" });
+      res.status(400).json({ error: "Name, email, and password are required" });
+      return;
     }
     if (password.length < 6) {
-      return res.status(400).json({ error: "Password must be at least 6 characters" });
+      res.status(400).json({ error: "Password must be at least 6 characters" });
+      return;
     }
     const existing = await db.query.usersTable.findFirst({
       where: eq(usersTable.email, email.toLowerCase()),
     });
     if (existing) {
-      return res.status(409).json({ error: "An account with this email already exists" });
+      res.status(409).json({ error: "An account with this email already exists" });
+      return;
     }
     const passwordHash = await hashPassword(password);
     const [user] = await db
@@ -66,22 +65,25 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res): Promise<void> => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
+      res.status(400).json({ error: "Email and password are required" });
+      return;
     }
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.email, email.toLowerCase().trim()),
     });
     if (!user) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      res.status(401).json({ error: "Invalid email or password" });
+      return;
     }
     if (user.passwordHash) {
       const valid = await verifyPassword(user.passwordHash, password);
       if (!valid) {
-        return res.status(401).json({ error: "Invalid email or password" });
+        res.status(401).json({ error: "Invalid email or password" });
+        return;
       }
     }
     res.json({
@@ -96,7 +98,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/profile", async (req, res) => {
+router.get("/profile", async (req, res): Promise<void> => {
   try {
     let user = await db.query.usersTable.findFirst({
       where: eq(usersTable.id, DEFAULT_USER_ID),
@@ -123,7 +125,7 @@ router.get("/profile", async (req, res) => {
   }
 });
 
-router.put("/profile", async (req, res) => {
+router.put("/profile", async (req, res): Promise<void> => {
   try {
     const { name, phone, county, city, dateOfBirth, gender, avatarUrl } = req.body;
     const [updated] = await db
@@ -132,7 +134,8 @@ router.put("/profile", async (req, res) => {
       .where(eq(usersTable.id, DEFAULT_USER_ID))
       .returning();
     if (!updated) {
-      return res.status(404).json({ error: "User not found" });
+      res.status(404).json({ error: "User not found" });
+      return;
     }
     res.json(updated);
   } catch (err) {
@@ -141,7 +144,7 @@ router.put("/profile", async (req, res) => {
   }
 });
 
-router.get("/health-profile", async (req, res) => {
+router.get("/health-profile", async (req, res): Promise<void> => {
   try {
     let profile = await db.query.healthProfilesTable.findFirst({
       where: eq(healthProfilesTable.userId, DEFAULT_USER_ID),
@@ -171,7 +174,7 @@ router.get("/health-profile", async (req, res) => {
   }
 });
 
-router.put("/health-profile", async (req, res) => {
+router.put("/health-profile", async (req, res): Promise<void> => {
   try {
     const { bloodGroup, height, weight, allergies, chronicConditions } = req.body;
     let profile = await db.query.healthProfilesTable.findFirst({

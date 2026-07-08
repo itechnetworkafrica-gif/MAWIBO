@@ -55,6 +55,7 @@ export default function Nutrition() {
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie data={[{ value: caloriesConsumed }, { value: Math.max(0, calorieGoal - caloriesConsumed) }]}
+                      dataKey="value"
                       cx="50%" cy="50%" innerRadius={48} outerRadius={60} startAngle={90} endAngle={-270} paddingAngle={2}>
                       <Cell fill="#5DADE2" />
                       <Cell fill="rgba(255,255,255,0.05)" />

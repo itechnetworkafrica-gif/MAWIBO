@@ -5,10 +5,10 @@ import { eq, ilike, and } from "drizzle-orm";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res): Promise<void> => {
   try {
     const { specialty, county, available, search } = req.query as Record<string, string>;
-    const conditions: any[] = [];
+    const conditions: ReturnType<typeof eq>[] = [];
     if (specialty) conditions.push(eq(doctorsTable.specialty, specialty));
     if (county) conditions.push(eq(doctorsTable.county, county));
     if (available === "true") conditions.push(eq(doctorsTable.available, true));
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/featured", async (req, res) => {
+router.get("/featured", async (req, res): Promise<void> => {
   try {
     const doctors = await db.select().from(doctorsTable).limit(6);
     res.json(doctors);
@@ -33,7 +33,7 @@ router.get("/featured", async (req, res) => {
   }
 });
 
-router.get("/specialties", async (req, res) => {
+router.get("/specialties", async (req, res): Promise<void> => {
   try {
     const specialties = await db.select().from(specialtiesTable);
     res.json(specialties);
@@ -43,11 +43,14 @@ router.get("/specialties", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res): Promise<void> => {
   try {
     const id = parseInt(req.params.id);
     const doctor = await db.query.doctorsTable.findFirst({ where: eq(doctorsTable.id, id) });
-    if (!doctor) return res.status(404).json({ error: "Doctor not found" });
+    if (!doctor) {
+      res.status(404).json({ error: "Doctor not found" });
+      return;
+    }
     res.json(doctor);
   } catch (err) {
     req.log.error({ err }, "getDoctor error");

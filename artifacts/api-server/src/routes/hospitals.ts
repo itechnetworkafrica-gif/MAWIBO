@@ -1,16 +1,14 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { hospitalsTable, pharmaciesTable, medicinesTable, labsTable, labBookingsTable } from "@workspace/db";
+import { hospitalsTable } from "@workspace/db";
 import { eq, and, ilike } from "drizzle-orm";
 
 const router = Router();
-const DEFAULT_USER_ID = 1;
 
-// Hospitals
-router.get("/", async (req, res) => {
+router.get("/", async (req, res): Promise<void> => {
   try {
     const { county, type, search } = req.query as Record<string, string>;
-    const conditions: any[] = [];
+    const conditions: ReturnType<typeof eq>[] = [];
     if (county) conditions.push(eq(hospitalsTable.county, county));
     if (type) conditions.push(eq(hospitalsTable.type, type));
     if (search) conditions.push(ilike(hospitalsTable.name, `%${search}%`));
@@ -24,11 +22,14 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res): Promise<void> => {
   try {
     const id = parseInt(req.params.id);
     const hospital = await db.query.hospitalsTable.findFirst({ where: eq(hospitalsTable.id, id) });
-    if (!hospital) return res.status(404).json({ error: "Not found" });
+    if (!hospital) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
     res.json(hospital);
   } catch (err) {
     req.log.error({ err }, "getHospital error");
