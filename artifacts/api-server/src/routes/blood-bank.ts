@@ -5,10 +5,10 @@ import { eq, and } from "drizzle-orm";
 
 const router = Router();
 
-router.get("/donors", async (req, res) => {
+router.get("/donors", async (req, res): Promise<void> => {
   try {
     const { bloodGroup, county } = req.query as Record<string, string>;
-    const conditions: any[] = [];
+    const conditions: ReturnType<typeof eq>[] = [];
     if (bloodGroup) conditions.push(eq(bloodDonorsTable.bloodGroup, bloodGroup));
     if (county) conditions.push(eq(bloodDonorsTable.county, county));
     const donors = conditions.length > 0
@@ -21,7 +21,7 @@ router.get("/donors", async (req, res) => {
   }
 });
 
-router.post("/donors", async (req, res) => {
+router.post("/donors", async (req, res): Promise<void> => {
   try {
     const { bloodGroup, county, phone } = req.body;
     const [donor] = await db.insert(bloodDonorsTable).values({
@@ -35,7 +35,7 @@ router.post("/donors", async (req, res) => {
   }
 });
 
-router.get("/requests", async (req, res) => {
+router.get("/requests", async (req, res): Promise<void> => {
   try {
     const requests = await db.select().from(bloodRequestsTable).orderBy(bloodRequestsTable.createdAt);
     res.json(requests);
@@ -45,7 +45,7 @@ router.get("/requests", async (req, res) => {
   }
 });
 
-router.post("/requests", async (req, res) => {
+router.post("/requests", async (req, res): Promise<void> => {
   try {
     const { bloodGroup, unitsNeeded, hospital, county, urgency, patientName, contactPhone } = req.body;
     const [request] = await db.insert(bloodRequestsTable).values({
