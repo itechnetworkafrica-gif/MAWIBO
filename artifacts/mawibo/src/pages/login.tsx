@@ -9,7 +9,7 @@ import { Mail, Lock, Loader2, AlertCircle, ShieldCheck, HeartPulse, Brain } from
 import logoUrl from "@assets/file_0000000066e071fda913e7e9c0fbbd82_1780941341572.png";
 import { motion } from "framer-motion";
 
-const BASE_URL = import.meta.env.BASE_URL?.replace(/\/$/, "") || "";
+import { apiUrl } from "@/lib/api-url";
 
 const features = [
   { icon: HeartPulse, text: "Real-time health monitoring & vitals" },
@@ -29,7 +29,7 @@ export default function Login() {
     setError("");
     setIsLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/api/users/login`, {
+      const res = await fetch(apiUrl("/users/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

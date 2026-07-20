@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { apiUrl } from "@/lib/api-url";
 
 const AI_TOOLS = [
   { id: "symptom-checker", name: "Symptom Checker", desc: "Analyze symptoms and get likely conditions", icon: Stethoscope, color: "from-red-500/20 to-rose-600/10 border-red-500/20", iconColor: "text-red-400", category: "Diagnosis", fields: [{ key: "symptoms", label: "Describe your symptoms", type: "textarea" }, { key: "age", label: "Age", type: "text" }, { key: "gender", label: "Gender", type: "text" }, { key: "duration", label: "Duration (e.g., 3 days)", type: "text" }] },
@@ -55,7 +56,7 @@ function ToolModal({ tool, onClose }: { tool: Tool; onClose: () => void }) {
           body[f.key] = formData[f.key] || "";
         }
       }
-      const resp = await fetch(`/api/ai-tools/${tool.id}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const resp = await fetch(apiUrl(`/ai-tools/${tool.id}`), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const data = await resp.json();
       const r = data.result;
       if (typeof r === "string") setResult(r);

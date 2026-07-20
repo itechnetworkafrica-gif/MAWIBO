@@ -1,0 +1,1 @@
+- [MAWIBO production setup](mawibo-production.md) — key deployment decisions, env vars, build quirks for this project

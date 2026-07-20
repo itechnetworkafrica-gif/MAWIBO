@@ -9,14 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Mail, Lock, User, Phone, MapPin, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import logoUrl from "@assets/file_0000000066e071fda913e7e9c0fbbd82_1780941341572.png";
 import { motion } from "framer-motion";
+import { apiUrl } from "@/lib/api-url";
 
 const LIBERIA_COUNTIES = [
   "Bomi", "Bong", "Gbarpolu", "Grand Bassa", "Grand Cape Mount",
   "Grand Gedeh", "Grand Kru", "Lofa", "Margibi", "Maryland",
   "Montserrado", "Nimba", "River Cess", "River Gee", "Sinoe",
 ];
-
-const BASE_URL = import.meta.env.BASE_URL?.replace(/\/$/, "") || "";
 
 export default function Register() {
   const { login } = useAuth();
@@ -53,7 +52,7 @@ export default function Register() {
 
     setIsLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/api/users/register`, {
+      const res = await fetch(apiUrl("/users/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
