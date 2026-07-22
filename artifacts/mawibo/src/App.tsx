@@ -2,7 +2,7 @@ import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { ErrorBoundary } from "@/components/error-boundary";
 import NotFound from "@/pages/not-found";
@@ -62,8 +62,7 @@ const queryClient = new QueryClient({
 });
 
 function RootRoute() {
-  const { isAuthenticated } = useAuth();
-  return <Redirect to={isAuthenticated ? "/dashboard" : "/login"} />;
+  return <Redirect to="/dashboard" />;
 }
 
 function P({ children }: { children: React.ReactNode }) {

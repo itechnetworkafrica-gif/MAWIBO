@@ -29,7 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     localStorage.removeItem("mawibo_token");
     setIsAuthenticated(false);
-    setLocation("/login");
+    setLocation("/dashboard");
   };
 
   return (
