@@ -91,19 +91,19 @@ function getResponse(path: string, method: string): { status: number; body: unkn
   // Appointments
   if (path === "/appointments" && m === "GET") return { status: 200, body: DEMO_APPOINTMENTS };
   if (path === "/appointments/upcoming") return { status: 200, body: DEMO_APPOINTMENTS.filter(a => a.status === "scheduled") };
-  if (path === "/appointments" && m === "POST") return { status: 201, body: { id: 99, userId: 1, status: "scheduled", ...DEMO_APPOINTMENTS[0] } };
+  if (path === "/appointments" && m === "POST") return { status: 201, body: { ...DEMO_APPOINTMENTS[0], id: 99, userId: 1, status: "scheduled" } };
   if (path.startsWith("/appointments/") && m === "GET") return { status: 200, body: DEMO_APPOINTMENTS[0] };
   if (path.startsWith("/appointments/") && (m === "PATCH" || m === "PUT")) return { status: 200, body: DEMO_APPOINTMENTS[0] };
 
   // Health records
   if (path === "/health-records" && m === "GET") return { status: 200, body: DEMO_RECORDS };
-  if (path === "/health-records" && m === "POST") return { status: 201, body: { id: 99, userId: 1, createdAt: new Date().toISOString(), ...DEMO_RECORDS[0] } };
+  if (path === "/health-records" && m === "POST") return { status: 201, body: { ...DEMO_RECORDS[0], id: 99, userId: 1, createdAt: new Date().toISOString() } };
   if (path.startsWith("/health-records/") && m === "GET") return { status: 200, body: DEMO_RECORDS[0] };
   if (path.startsWith("/health-records/") && m === "DELETE") return { status: 204, body: null };
 
   // Medications
   if (path === "/medications" && m === "GET") return { status: 200, body: DEMO_MEDS };
-  if (path === "/medications" && m === "POST") return { status: 201, body: { id: 99, userId: 1, status: "active", ...DEMO_MEDS[0] } };
+  if (path === "/medications" && m === "POST") return { status: 201, body: { ...DEMO_MEDS[0], id: 99, userId: 1, status: "active" } };
   if (path.startsWith("/medications/") && m === "PATCH") return { status: 200, body: DEMO_MEDS[0] };
   if (path.startsWith("/medications/") && m === "DELETE") return { status: 204, body: null };
 
